@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
-
-
+const idGenerator = require('../helpers/idGenerator');
+ 
 const UserSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        unique: true,
+        default: () => idGenerator('USER'),
+    },
     username: {
         type: String,
         required: true,
@@ -15,7 +20,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-})
-
+    profileImage: {
+        type: String,
+        required: false,
+        default: null
+    },
+}, {timestamps: true})
 
 module.exports = mongoose.model('User', UserSchema);

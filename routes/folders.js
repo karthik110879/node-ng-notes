@@ -5,26 +5,27 @@ const User = require('../models/User');
 const router = express.Router();
 
 
-//Register
-router.post('/register', async (req, res) => {
-    const {username, email, password} = req.body;
-
+//create folder
+router.post('fldr/', async (req, res) => {
+    const {name} = req.body;
+    console.log(name);
     try {
-        const existing = await User.findOne({email});
-        if(existing) return res.status(400).json({msg: 'User already exsists'}); 
-        const hashed = await bcrypt.hash(password, 10); 
-        const user = new User({username, email, password: hashed}); 
-        await user.save(); 
-        res.status(201).json({msg: 'User Created'});
+        // const existing = await User.findOne({email});
+        // if(existing) return res.status(400).json({msg: 'User already exsists'});
+
+        // const hashed = await bcrypt.hash(password, 10);
+        // const user = new User({username, email, password: hashed});
+        // await user.save();
+        res.status(201).json({msg: 'Create folder'});
     } catch (error) {
-        console.error('Register error:', error.message); 
+        // console.error('Register error:', error.message); 
         res.status(500).send('Server Error');
     }
 })
 
-//Login
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+//Update folder 
+router.post('/fldr/:folderId', async (req, res) => {
+    const { folderId, name } = req.body;
     try {
         const user = await User.findOne({ email });
         if(!user) return res.status(400).json({msg: 'Invalid Credentials'});
