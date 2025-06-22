@@ -12,6 +12,7 @@ app.use(express.json());
 
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth', require('./routes/folders'));
 
 const PORT = process.env.PORT || 5000;
 
