@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 //create folder
-router.post('/user/:userId/fldr/', async (req, res) => {
+router.post('/user/:userId/folder/', async (req, res) => {
     const {title} = req.body;
     const {userId} = req.params;
     try {
@@ -24,8 +24,20 @@ router.post('/user/:userId/fldr/', async (req, res) => {
     }
 })
 
+// get all folders
+
+router.get('/user/:userId/folders', async (req, res) => {
+    const {userId} = req.params;
+    try {
+        const allFolders = await Folder.find({userId});
+        return res.status(200).json(allFolders)
+    } catch (error) {
+        res.status(500).send('Error while fetching folders')
+    }
+})
+
 //Update folder 
-router.post('/fldr/:folderId', async (req, res) => {
+router.post('/folder/:folderId', async (req, res) => {
     const { folderId, name } = req.body;
     try {
         const user = await User.findOne({ email });
