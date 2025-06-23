@@ -9,26 +9,23 @@ const router = express.Router();
 //create notes
 router.post('/user/:userId/folder/:folderId/note', async (req, res) => {
     const {title} = req.body;
-    const {description} = req.body;
+    const {content} = req.body;
     const {userId} = req.params;
     const {folderId} = req.params;
-    try {
-        console.log('Reached create notes');
-        // const existing = await User.findOne({email});
-        // if(existing) return res.status(400).json({msg: 'User already exsists'});
-
-        // const hashed = await bcrypt.hash(password, 10);
-        const newFolder = new Note({
+    try { 
+        const newNote = new Note({
             title: title, 
-            description:description,
+            content:content,
             folderId: folderId,
             userId: userId
         });
-        await newFolder.save();
-        res.status(201).json({msg: 'Create Note'});
+        console.log('newNote',newNote);
+        
+        await newNote.save();
+        res.status(201).json({msg: `Create Note ${newNote.noteId}`});
     } catch (error) {
         // console.error('Register error:', error.message); 
-        res.status(500).send('Server Error');
+        res.status(500).send(`Server Error ${error}`);
     }
 })
 

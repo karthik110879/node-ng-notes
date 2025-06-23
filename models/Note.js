@@ -22,7 +22,7 @@ const NoteSchema = new mongoose.Schema({
         required: false,
         default: ''
     },
-    description: {
+    content: {
         type: String,
         required: true,
         default: ''
