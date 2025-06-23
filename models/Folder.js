@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const idGenerator = require('../helpers/idGenerator');
+
 
 
 const FolderSchema = new mongoose.Schema({
@@ -6,6 +8,10 @@ const FolderSchema = new mongoose.Schema({
         type: String,
         unique: true,
         default: () => idGenerator('FLDR'),
+    },
+    userId: {
+        type: String,
+        required: false
     },
     name: {
         type: String,
