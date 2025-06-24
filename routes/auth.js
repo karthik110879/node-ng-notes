@@ -37,7 +37,8 @@ router.post("/login", async (req, res) => {
             user: { 
                 id: user.userId, 
                 username: user.username, 
-                email: user.email 
+                email: user.email,
+                settingId: user.userSettingsId || null
             },
         });
     } catch (error) {
