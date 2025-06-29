@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Session = require("../models/Session");
 const router = express.Router();
+const tokenMiddleware = require("../middlewears/tokenMiddlewear");
 
 //Register
 router.post("/register", async (req, res) => {
@@ -76,8 +77,8 @@ router.post("/login", async (req, res) => {
 });
 
 //Logout
-router.post("/logout", async (req, res) => {
-      const sessionId = req.session?._id;
+router.post("/logout",tokenMiddleware, async (req, res) => {
+      const sessionId = req.session?.userId;
     console.log('WHILE LOGOUT ==> ', sessionId);
     
 })
