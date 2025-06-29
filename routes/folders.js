@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Folder = require('../models/Folder');
 const router = express.Router();
-
+const tokenMiddlewear = require('../middlewears/tokenMiddlewear');
 
 //create folder
 router.post('/user/:userId/folder/', async (req, res) => {
@@ -26,7 +26,7 @@ router.post('/user/:userId/folder/', async (req, res) => {
 
 // get all folders
 
-router.get('/user/:userId/folders', async (req, res) => {
+router.get('/user/:userId/folders', tokenMiddlewear , async (req, res) => {
     const {userId} = req.params;
     try {
         const allFolders = await Folder.find({userId});
@@ -37,7 +37,7 @@ router.get('/user/:userId/folders', async (req, res) => {
 })
 
 //Update folder 
-router.post('/folder/:folderId', async (req, res) => {
+router.post('/folder/:folderId', tokenMiddlewear , async (req, res) => {
     const { folderId, name } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -46,8 +46,8 @@ router.post('/folder/:folderId', async (req, res) => {
         const isMatch = bcrypt.compare(password, user.password);
         if(!isMatch) return res.status(400).json({msg: "Invalid Credentials"});
 
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRATION_TIME});
-        res.json({token, user: {id: user._id, username: user.username, email: user.email} });
+        // const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRATION_TIME});
+        // res.json({token, user: {id: user._id, username: user.username, email: user.email} });
     } catch (error) {
         res.status(500).send('Server Error');
     }

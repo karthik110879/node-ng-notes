@@ -4,10 +4,11 @@ const jwt = require('jsonwebtoken');
 const Folder = require('../models/Folder');
 const Note = require('../models/Note');
 const router = express.Router();
+const tokenMiddlewear = require('../middlewears/tokenMiddlewear');
 
 
 //create notes
-router.post('/user/:userId/folder/:folderId/note', async (req, res) => {
+router.post('/user/:userId/folder/:folderId/note', tokenMiddlewear , async (req, res) => {
     const {title} = req.body;
     const {content} = req.body;
     const {userId} = req.params;
@@ -30,7 +31,7 @@ router.post('/user/:userId/folder/:folderId/note', async (req, res) => {
 })
 
 // get all notes 
-router.get('/user/:userId/folders/:folderId/notes', async (req, res) => { 
+router.get('/user/:userId/folders/:folderId/notes', tokenMiddlewear , async (req, res) => { 
     const {userId} = req.params;
     const {folderId} = req.params;
     try {
@@ -43,7 +44,7 @@ router.get('/user/:userId/folders/:folderId/notes', async (req, res) => {
 })
 
 //Update note 
-router.post('/user/:userId/folders/:folderId/notes/:noteId', async (req, res) => {
+router.post('/user/:userId/folders/:folderId/notes/:noteId', tokenMiddlewear , async (req, res) => {
     const { folderId, name } = req.body;
     try {
         console.log('Reached Update note ');
@@ -62,7 +63,7 @@ router.post('/user/:userId/folders/:folderId/notes/:noteId', async (req, res) =>
 });
 
 //Delete note 
-router.post('/user/:userId/folders/:folderId/notes/:noteId', async (req, res) => {
+router.post('/user/:userId/folders/:folderId/notes/:noteId', tokenMiddlewear , async (req, res) => {
     const { folderId, name } = req.body;
     try {
         console.log('Reached Delete note ');
