@@ -69,19 +69,18 @@ router.post('/user/:userId/folders/:folderId/notes/:noteId', tokenMiddlewear , a
 });
 
 //Delete note 
-router.post('/user/:userId/folders/:folderId/notes/:noteId', tokenMiddlewear , async (req, res) => {
-    const { folderId, name } = req.body;
+router.delete('/user/:userId/folders/:folderId/notes/:noteId', tokenMiddlewear , async (req, res) => {
+    // const {title, content} = req.body; 
+    const {userId, folderId, noteId} = req.params; 
     try {
         console.log('Reached Delete note ');
-        // const user = await User.findOne({ email });
-        // if(!user) return res.status(400).json({msg: 'Invalid Credentials'});
-
-        // const isMatch = bcrypt.compare(password, user.password);
-        // if(!isMatch) return res.status(400).json({msg: "Invalid Credentials"});
-
-        // const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRATION_TIME});
-        // res.json({token, user: {id: user._id, username: user.username, email: user.email} });
+        const note = await Note.findOneAndDelete({ noteId });
+        if (!note) {
+            return res.status(404).json({ message: 'Note not found or does not belong to the user' });
+        }
+        return res.status(200).json({ msg: 'Note deleted successfully' }); 
     } catch (error) {
+        console.error('Error deleting note:', error);
         res.status(500).send('Server Error');
     }
 });
