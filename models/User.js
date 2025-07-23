@@ -7,6 +7,11 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         default: () => idGenerator('USER'),
     },
+    userSettingsId: {
+        type: String,
+        unique: true,
+        default: () => idGenerator('SETNG'),
+    },
     username: {
         type: String,
         required: true,
