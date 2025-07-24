@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Folder = require('../models/Folder');
+const Note = require('../models/Note');
 const router = express.Router();
 const tokenMiddlewear = require('../middlewears/tokenMiddlewear');
 
@@ -25,7 +26,6 @@ router.post('/user/:userId/folder/', async (req, res) => {
 })
 
 // get all folders
-
 router.get('/user/:userId/folders', tokenMiddlewear , async (req, res) => {
     const {userId} = req.params;
     try {
@@ -50,6 +50,32 @@ router.post('/folder/:folderId', tokenMiddlewear , async (req, res) => {
         // res.json({token, user: {id: user._id, username: user.username, email: user.email} });
     } catch (error) {
         res.status(500).send('Server Error');
+    }
+});
+
+//Delete folder 
+router.delete('/user/:userId/folder/:folderId', tokenMiddlewear , async (req, res) => {
+    // const { folderId, name } = req.body;
+    const {folderId} = req.params;
+    try {
+        const folderToDelete = await Folder.findOne({folderId});
+        if (!folderToDelete) {
+            return res.status(404).json({ message: 'Folder not found or does not belong to the user' });
+        }
+        // check if the folder has notes if it has any notes throw error under lying notes exist cannot delete folder
+        const notesInFolder = await Note.find({folderId});
+        if (notesInFolder.length > 0) {
+            return res.status(400).json({ message: 'Cannot delete folder with existing notes' });
+        }
+        // If the folder exists and has no notes, delete it
+        console.log('Reached Delete folder with params', folderId); 
+        const deletdFolder = await Folder.findOneAndDelete({folderId});
+        if(!deletdFolder) {
+            return res.status(404).json({ message: 'Folder not found or does not belong to the user' });
+        }
+        return res.status(200).json({ msg: 'Folder deleted successfully' })
+    } catch (error) {
+        res.status(500).send('Error while fetching folders')
     }
 });
 
